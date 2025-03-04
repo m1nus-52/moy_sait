@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoundButton</title>
+    <style>
+        /* Стили для центрирования кнопки */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: black;
+        }
+
+        #mainButton {
+            width: 300px; /* Размер кнопки */
+            height: 300px;
+            background-color: red;
+            border-radius: 50%;
+            border: none;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Кнопка -->
+    <button id="mainButton">Click Me!</button>
+
+    <!-- Аудио с правильным путем -->
+    <audio id="sound" src="{{ url_for('static', filename='sound.mp3') }}"></audio>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let audio = document.getElementById('sound');
+            let mainButton = document.getElementById("mainButton");
+
+            // Проверяем доступ к звуку при клике на страницу
+            document.body.addEventListener("click", () => {
+                audio.play().then(() => {
+                    audio.pause();
+                    audio.currentTime = 0;
+                    console.log("Браузер разрешил звук!");
+                }).catch(error => {
+                    console.warn("Попытка включить звук не удалась:", error);
+                });
+            }, { once: true });
+
+            // Кнопка запускает звук
+            mainButton.addEventListener("click", () => {
+                audio.currentTime = 0;
+                audio.play().catch(error => {
+                    console.error("Ошибка воспроизведения:", error);
+                    alert("Браузер блокирует звук! Сначала кликните в любое место страницы.");
+                });
+            });
+        });
+    </script>
+</body>
+</html>
